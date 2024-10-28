@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Deck Controller</title>
+</head>
+<body>
+    <h1>Stream Deck Controller</h1>
+    <div id="status">Awaiting button events...</div>
+
+    <div>
+        <h3>Brightness Control</h3>
+        <input type="range" id="brightness" min="0" max="100" value="30">
+        <button onclick="setBrightness()">Set Brightness</button>
+    </div>
+
+    <div>
+        <h3>Demo Features</h3>
+        <button onclick="startColorCycle()">Start Color Cycle Demo</button>
+        <button onclick="clearAllButtons()">Clear All Buttons</button>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+
+        window.electronAPI.onButtonPress((event, keyIndex) => {
+            statusDiv.innerHTML = `Button ${keyIndex} pressed`;
+        });
+
+        window.electronAPI.onButtonRelease((event, keyIndex) => {
+            statusDiv.innerHTML = `Button ${keyIndex} released`;
+        });
+
+        function setBrightness() {
+            const brightness = document.getElementById('brightness').value;
+            window.electronAPI.setBrightness(parseInt(brightness, 10));
+        }
+
+        function startColorCycle() {
+            window.electronAPI.startColorCycle();
+        }
+
+        function clearAllButtons() {
+            window.electronAPI.clearAllButtons();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "consolecontrol",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ASETECH",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "electron": "^33.0.2"
+  },
+  "dependencies": {
+    "@elgato-stream-deck/webhid": "^7.0.2",
+    "@julusian/jpeg-turbo": "^2.2.0",
+    "elgato-stream-deck": "^4.3.0",
+    "sharp": "^0.33.5"
+  }
+}
