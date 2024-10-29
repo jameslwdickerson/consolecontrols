@@ -5,7 +5,6 @@ const fs = require('fs').promises;
 
 let mainWindow;
 let myStreamDeck;
-let streamDeck;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -22,42 +21,6 @@ function createWindow() {
     mainWindow.on('closed', function () {
         mainWindow = null;
     });
-}
-// Function to load and display an image on a specific button
-async function displayImageOnButton(filePath, keyIndex) {
-  try {
-      // Load the image from the given path
-      const image = nativeImage.createFromPath(filePath);
-      
-      // Check if the image was loaded successfully
-      if (!image.isEmpty()) {
-          // Resize the image to match the Stream Deck’s button dimensions
-          const resizedImage = image.resize({
-              width: ICON_SIZE,
-              height: ICON_SIZE,
-              quality: 'best',
-          });
-
-          // Ensure the resized image is valid
-          if (!resizedImage.isEmpty()) {
-              // Get the image as a raw RGB buffer
-              const rgbBuffer = resizedImage.toBitmap();
-
-              // Ensure myStreamDeck is initialized before calling fillKeyBuffer
-              if (myStreamDeck) {
-                  await myStreamDeck.fillKeyBuffer(keyIndex, rgbBuffer);
-              } else {
-                  console.error("Stream Deck is not initialized.");
-              }
-          } else {
-              console.error("Resized image is empty or invalid.");
-          }
-      } else {
-          console.error("Failed to load image: Image is empty.");
-      }
-  } catch (error) {
-      console.error('Error setting image on button:', error);
-  }
 }
 
 // Create cycling colors for animation
