@@ -21,6 +21,34 @@
         <button onclick="clearAllButtons()">Clear All Buttons</button>
     </div>
 
+    <!-- New Section for Stream Decks -->
+    <div>
+        <h3>Connected Stream Decks</h3>
+        <button id="get-decks">Get Stream Decks</button>
+        <ul id="deck-list"></ul>
+    </div>
+
+    <!-- New Section for Color Picker -->
+    <div>
+        <h3>Color Picker for Button 4</h3>
+        <input type="color" id="color-picker" value="#0000ff"> <!-- Default color set to blue -->
+        <button id="set-color-button">Set Color</button>
+    </div>
+
+    <!-- For adding text to button 2 -->
+    <div>
+        <h3>Set Text for Button 2</h3>
+        <input type="text" id="text-input" placeholder="Enter text for button 2"> <!-- Updated to match ID in JavaScript -->
+        <button id="set-text-button">Set Text</button>
+    </div>
+
+    <!-- New Section for Image Upload -->
+    <!-- <div>
+        <h3>Upload Image for Button 3</h3>
+        <input type="file" id="image-input" accept="image/jpeg">
+        <button id="set-image-button">Set Image</button>
+    </div> -->
+
     <script>
         const statusDiv = document.getElementById('status');
 
@@ -44,6 +72,74 @@
         function clearAllButtons() {
             window.electronAPI.clearAllButtons();
         }
+
+        // New Functions for Getting Stream Decks
+        document.getElementById('get-decks').addEventListener('click', () => {
+            window.electronAPI.getStreamDecks(); // Request the list of connected Stream Decks
+        });
+
+        window.electronAPI.onStreamDecksResponse((event, devices) => {
+            const deckList = document.getElementById('deck-list');
+            deckList.innerHTML = ''; // Clear the list before adding new items
+            devices.forEach(device => {
+                const li = document.createElement('li');
+                li.textContent = device; // Display the device name
+                deckList.appendChild(li);
+            });
+        });
+
+        // Add event listener for the set color button
+        document.getElementById('set-color-button').addEventListener('click', () => {
+            const colorPicker = document.getElementById('color-picker').value; // Get the selected color
+            // Convert hex to RGB
+            const rgb = hexToRgb(colorPicker);
+            // Send the RGB values to the main process for the 4th button
+            window.electronAPI.setColorPicker({ r: rgb.r, g: rgb.g, b: rgb.b });
+        });
+
+        // Utility function to convert hex to RGB
+        function hexToRgb(hex) {
+            hex = hex.replace(/^#/, ''); // Remove the hash symbol if present
+            const bigint = parseInt(hex, 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+
+            return { r, g, b };
+        }
+
+        // for adding text to button 2
+        document.getElementById('set-text-button').addEventListener('click', () => {
+            const text = document.getElementById('text-input').value; // Get the text input
+            console.log(text, 'html');
+            window.electronAPI.setText('set-text-button', text); // Send the text to the main process
+        });
+
+        // For button images
+        // document.getElementById('set-image-button').addEventListener('click', () => {
+        //     const fileInput = document.getElementById('image-input'); // Your file input element
+        //     const file = fileInput.files[0]; // Get the first selected file
+        //     if (file) {
+        //         const imagePath = file.path; // Get the file path
+        //         window.electronAPI.setImage(imagePath); // Send image path to main process
+        //     } else {
+        //         alert('Please select an image file first.');
+        //     }
+        // });
+
+        // setImageButton.addEventListener('click', () => {
+        //     const file = imageInput.files[0]; // Get the selected file
+        //     if (file) {
+        //         const reader = new FileReader();
+        //         reader.onload = (event) => {
+        //             const imageBuffer = event.target.result; // Get the image data as ArrayBuffer
+        //             window.electronAPI.setImage(imageBuffer); // Send image buffer to main process
+        //         };
+        //         reader.readAsArrayBuffer(file); // Read file as ArrayBuffer
+        //     } else {
+        //         alert('Please select an image file first.');
+        //     }
+        // });
     </script>
 </body>
 </html>
